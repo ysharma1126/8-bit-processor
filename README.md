@@ -16,6 +16,6 @@ Further work:
 
 2) Write a compiler which compiles C code down to assembly code which can be assembled by our assembler
 
-3) Rather than the simple implementation of Data Memory used, employ proper caching and a memory hierarchy
+3) Rather than the simple implementation of byte-addressable data memory used, employ proper caching and a memory hierarchy
 
 4) PIPELINE IT!
