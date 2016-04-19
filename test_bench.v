@@ -26,6 +26,7 @@ wire RegWrite;
 wire MemWrite;
 wire branch, PCSrc;
 wire [1:0] ALUCtrlSig;
+reg lireg;
 
 wire [IM_ADDR_W_m1:0] newIADDR, iABUS;
 MIPSPC PC(clk, newIADDR, iABUS);
@@ -49,15 +50,15 @@ SignExtend SignExt(iDATABUS[2:0], extended8_1[7:0]);
 ZeroExtend ZeroExt(iDATABUS[3:0], extended8_2[7:0]);
 
 assign PCSrc = Zero & branch;
-getNextPC NextPC(PCSrc, jump, iABUS, extended8, newIADDR);
+getNextPC NextPC(PCSrc, iDATABUS, jump, iABUS, extended8, newIADDR);
 
 STwoToOne TwoToOne_1(ALUSrc, ReadData2, extended8, ALUSndInput1); 
 STwoToOne TwoToOne_2(MemToReg, ALUOut, dDATABUS, WriteData); 
-STwoToOne TwoToOne_3(LI,ReadData1,8'b00000000, ALUSndInput2)
-STwoToOne TwoToOne_4(M, extended8_1, extended8_2, extended8)
+STwoToOne TwoToOne_3(lireg, ReadData1,8'b00000000, ALUSndInput2);
+STwoToOne TwoToOne_4(M, extended8_1, extended8_2, extended8);
 
 
-MIPSCtrl Control(instr, ALUSrc, MemToReg, RegWrite, MemWrite, branch, M, jump, ALUCtrl);
+MIPSCtrl Control(instr, lireg, ALUSrc, MemToReg, RegWrite, MemWrite, branch, M, jump, ALUCtrl);
 
 endmodule
 

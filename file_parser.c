@@ -116,7 +116,7 @@ void parse_file(FILE *fptr, int pass, char *instructions[], size_t inst_len, has
 			*/
 			// If token is ".data", reset instruction to .data starting address
 			else if (strcmp(token, ".data") == 0) {
-				instruction_count = 0x00002000;
+				instruction_count = 0x40;
 				/*
 				*****************No clue why .data starting address is that, needs to be changed **************************
 				*/
@@ -179,8 +179,7 @@ void parse_file(FILE *fptr, int pass, char *instructions[], size_t inst_len, has
 							sscanf(var_tok, "%*s %d", &num);
 
 							// Increment instruction count by freq
-							//instruction_count = instruction_count + (4*freq);
-							instruction_count = instruction_count + freq;
+							instruction_count = instruction_count + (4*freq);
 
 							// Strip out ':' from token
 							size_t token_len = strlen(token);
@@ -204,8 +203,7 @@ void parse_file(FILE *fptr, int pass, char *instructions[], size_t inst_len, has
 
 						// Variable is a single variable
 						else {
-							//instruction_count = instruction_count + 4;
-							instruction_count = instruction_count + 1;
+							instruction_count = instruction_count + 4;
 
 							// Strip out ':' from token
 							size_t token_len = strlen(token);
@@ -230,8 +228,7 @@ void parse_file(FILE *fptr, int pass, char *instructions[], size_t inst_len, has
 					else if (strstr(tok_ptr, ".asciiz")) {
 
 						// Store the ascii in var_tok
-						//var_tok_ptr+= 8;
-						var_tok_ptr+=2;
+						var_tok_ptr+= 8;
 						var_tok = parse_token(var_tok_ptr, "\"", &var_tok_ptr, NULL);
 
 						// Increment instruction count by string length

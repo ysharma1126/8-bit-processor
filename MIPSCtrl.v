@@ -1,11 +1,12 @@
-module MIPSCtrl (instr, ALUSrc, MemToReg, RegWrite, MemWrite, branch, M, jump, ALUCtrl);
+module MIPSCtrl (instr, lireg, ALUSrc, MemToReg, RegWrite, MemWrite, branch, M, jump, ALUCtrl);
 
 input [7:0] instr;
+inout [0:0] lireg;
 output reg ALUSrc, MemToReg, RegWrite, MemWrite, branch, M, jump;
 output reg [1:0] ALUCtrl;
 
 always @(instr) //reevaluate if these change
-if (instr[7:5] == 3'b000) //*****************li (Need to update this)***************
+if (instr[7:5] == 3'b000 && lireg==1'b0) //li (lui)
   begin
     ALUSrc <= 1;
     MemToReg <= 1;
@@ -14,7 +15,20 @@ if (instr[7:5] == 3'b000) //*****************li (Need to update this)***********
     branch <= 0;
     jump <= 0;
     M <= 1;
+    ALUCtrl <= 2'b11;
+    lireg <= 1;
+  end
+else if(instr[7:5] == 3'b000 && lireg==1'b1) //li (lli)
+ begin
+    ALUSrc <= 1;
+    MemToReg <= 1;
+    RegWrite <= 1;
+    MemWrite <= 0;
+    branch <= 0;
+    jump <= 0;
+    M <= 1;
     ALUCtrl <= 2'b00;
+    lireg <= 0;
   end
 else if (instr[7:5] == 3'b001) // lw
   begin
@@ -73,7 +87,7 @@ else if (instr[7:5] == 3'b101) //slti
   end
 else if (instr[7:5] == 3'b110)  //*****************add (Need to update this)******************
   begin
-    ALUSrc <= 1;
+    ALUSrc <= 0;
     MemToReg <= 0;
     RegWrite <= 1;
     MemWrite <= 0;

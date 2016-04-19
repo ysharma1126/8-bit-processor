@@ -1,6 +1,7 @@
-module getNextPC (PCSrc, jump, currPC, offset, out);
+module getNextPC (PCSrc, databus jump, currPC, offset, out);
   parameter MIPS_PC_WIDTH_m1 = 7;  
   input PCSrc, jump;
+  input [MIPS_PC_WIDTH_m1:0] databus;
   input [MIPS_PC_WIDTH_m1:0] offset;
   input [MIPS_PC_WIDTH_m1:0] currPC;
   output reg [MIPS_PC_WIDTH_m1:0] out;
@@ -14,5 +15,5 @@ module getNextPC (PCSrc, jump, currPC, offset, out);
 			out <= currPC + 1 + offset;	 
     end
   else
-    //Jump logic 
+    out <= {currPC[7:5],databus[4:0]}
   endmodule
