@@ -3,8 +3,10 @@
 
 #include <iostream>
 #include <fstream>
-using namespace std;
+#include <sstream>
 
-void assemblyToBinary(string assembly_file, string machine_file);
+bool checkFileExists(std::string file_name);
+void assemblyToBinary(std::string input_file, std::string output_file);
+std::string getOpcode(std::string * instruction);
 
 #endif
