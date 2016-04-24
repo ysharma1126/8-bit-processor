@@ -12,11 +12,13 @@ void assemblyToBinary(string assembly_name, string machine_name){
 	ifstream assembly_file;
 	ofstream machine_file;
 	string instruction; //holds lines read in from assembly_file
-	string opcode;
+	string binary=""; //holds binary instruction
+	int format; //holds format type
 	assembly_file.open("program/" + assembly_name);
 	machine_file.open("program/" + machine_name);
 	while( getline(assembly_file,instruction)){
-		opcode = getOpcode(&instruction);
+		format = getFormat(&instruction);
+		binary = binary + getOpcode(&instruction);
 	}
 }
 
@@ -56,4 +58,34 @@ string getOpcode(string * instruction){
 	catch (string e){
 		cout << "Error: " << e << " is not a valid instruction" << endl;
 	}
+}
+
+//takes the instruction and returns the format
+//1 is M-format, 2 is I-format, 3 is J-format 
+int getFormat(string * instruction){
+	string command; //holds the actual command from the instruction
+	command=instruction->substr(0,instruction->find(" "));
+	try {
+		if(command == "li"){
+			return 1;
+		}
+		else if (command == "add" || command == "addi" || command == "sw" 
+			|| command == "lw" || command == "beq" || command == "slti"){
+			return 2;
+		}
+		else if (command == "j"){
+			return 3;
+		}
+		else{
+			throw command;
+		}
+	}
+	catch (string e){
+		cout << "Error: " << e << " is not a valid instruction" << endl;
+	}
+}
+
+//takes the instruction and returns the registers in the correct format
+string getRegisters(string * instruction){
+	string regs; // holds the output
 }
