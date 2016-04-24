@@ -4,11 +4,13 @@ Built an 8-bit Single-cycle Processor (Data and Address are both 8 bits) capable
 
 Datapath.jpg=Block Diagram of Datapath+ISA+Control Table
 
-assembler.c= Utilizes file_parser.c, which utilizes the hashing header files, to assemble an assembly program under our ISA 
+assembler.cpp= Utilizes file_parser.cpp, through 2 standard passes, to assemble an assembly program under our ISA (Demonstration programs are a factorial and fibonacci procedure) 
 
 The outputted machine code is then read into memory, which is one of the many processor components coded in Verilog 
 
 test_bench.v instantiates the modules in such a way to transform the individual processor components into the envisioned datapath
+
+All of this is executed through the Makefile. 
 
 Further work: 
 
