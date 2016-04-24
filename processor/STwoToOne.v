@@ -1,3 +1,5 @@
+`timescale 1s/1s
+
 module STwoToOne (sel, in0, in1, out);
   input sel;
   input [7:0] in0, in1;

@@ -1,3 +1,5 @@
+`timescale 1s/1s
+
 module DM(MemRead, MemWrite, ABUS, DIN, DATABUS);
 
   parameter DELAY_T = 10;
@@ -6,8 +8,8 @@ module DM(MemRead, MemWrite, ABUS, DIN, DATABUS);
   parameter DM_ADDR_W_m1 = 7;
   parameter DM_ADDR_MAX_m1 = 255;
   parameter DM_DATA_Z = 8'bzzzzzzzz;
-
-  input MemRead;                       
+                   
+  input MemRead;
   input MemWrite;                      
   input [DM_ADDR_W_m1:0] ABUS;      // address bus
   input [DM_DATA_W_m1:0] DIN;       // data in bus
@@ -31,12 +33,11 @@ module DM(MemRead, MemWrite, ABUS, DIN, DATABUS);
   always @(MemRead or MemWrite or ABUS or DIN)
     begin
       #DELAY_T DATABUS_driver =  ram[ABUS];
-      $display($time," Reading %m ABUS=%b DATA=%b",ABUS,DATABUS_driver);
-      
       if (MemWrite == 1'b1)
-        begin
-        $display($time," Writing %m ABUS=%b DATA=%b",ABUS,DIN);
+      begin
+      #30
+      if (MemWrite == 1'b1)
         ram[ABUS] = DIN;
-        end
     end
+  end
 endmodule

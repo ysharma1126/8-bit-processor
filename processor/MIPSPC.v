@@ -1,3 +1,4 @@
+`timescale 1s/1s
 
 module MIPSPC(clk, newPC, PC);
 
