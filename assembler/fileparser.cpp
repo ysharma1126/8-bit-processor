@@ -19,6 +19,12 @@ void assemblyToBinary(string assembly_name, string machine_name){
 	while( getline(assembly_file,instruction)){
 		format = getFormat(&instruction);
 		binary = binary + getOpcode(&instruction);
+		if(format == 1 || format == 2){ //if format is M or I
+			binary = binary + getRegisters(&instruction,format);
+		}
+		binary = binary + getImmediate(&instruction,format);
+		cout << binary << endl;
+		binary = "";
 	}
 }
 
@@ -86,6 +92,56 @@ int getFormat(string * instruction){
 }
 
 //takes the instruction and returns the registers in the correct format
-string getRegisters(string * instruction){
-	string regs; // holds the output
+string getRegisters(string * instruction, int format){
+	string reg1, reg2;
+	int dollarsign1; //stores location of first dollar sign
+	int dollarsign2; //stores location of second dollar sign
+	int comma1; //stores location of first comma
+	int comma2; //stores location of second comma
+	dollarsign1 = instruction->find("$");
+	comma1 = instruction->find(",");
+	reg1 = instruction->substr(dollarsign1+1,comma1-dollarsign1-1);
+	try {
+		if (!(reg1 == "0" || reg1 == "1")){
+			throw reg1;
+		}
+	}
+	catch (string e){
+		cout << "Error: Could not find register $" << e << endl;
+	}
+	if (format == 1){ //M formats only have one register
+		return reg1;
+	}
+	dollarsign2 = instruction->find("$",dollarsign1+1);
+	comma2 = instruction->find(",",dollarsign2);
+	reg2 = instruction->substr(dollarsign2+1,comma2-dollarsign2-1);
+	try {
+		if (!(reg2 == "0" || reg2 == "1")){
+			throw reg1;
+		}
+	}
+	catch (string e){
+		cout << "Error: Could not find register $" << e << endl;
+	}
+	return reg2+reg1;
+}
+
+string getImmediate(string * instruction, int format){
+	string immediate;
+	int comma1; //stores location of first comma
+	int comma2; //stores location of second comma
+	int space; //stores location of first space
+	space = instruction->find(" ");
+	comma1 = instruction->find(",");
+	comma2 = instruction->find(",",comma1+1);
+	if(format == 1){
+		immediate = instruction->substr(comma1+1,4);
+	}
+	else if(format == 2){
+		immediate = instruction->substr(comma2+1,3);
+	}
+	else if(format == 3){
+		immediate = instruction->substr(space+1,5);
+	}
+	return immediate;
 }
