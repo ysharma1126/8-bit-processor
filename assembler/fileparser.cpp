@@ -23,7 +23,7 @@ void assemblyToBinary(string assembly_name, string machine_name){
 			binary = binary + getRegisters(&instruction,format);
 		}
 		binary = binary + getImmediate(&instruction,format);
-		cout << binary << endl;
+		machine_file << binary << "\n";
 		binary = "";
 	}
 }
