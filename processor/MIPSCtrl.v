@@ -1,8 +1,10 @@
-module MIPSCtrl (instr, lireg, ALUSrc, MemToReg, RegWrite, MemWrite, branch, M, jump, ALUCtrl);
+`timescale 1s/1s
+
+module MIPSCtrl (instr, lireg, ALUSrc, MemToReg, RegWrite, MemWrite, MemRead, branch, M, jump, ALUCtrl);
 
 input [7:0] instr;
-inout [0:0] lireg;
-output reg ALUSrc, MemToReg, RegWrite, MemWrite, branch, M, jump;
+input lireg;
+output reg ALUSrc, MemToReg, RegWrite, MemWrite, MemRead, branch, M, jump;
 output reg [1:0] ALUCtrl;
 
 always @(instr) //reevaluate if these change
@@ -12,11 +14,11 @@ if (instr[7:5] == 3'b000 && lireg==1'b0) //li (lui)
     MemToReg <= 1;
     RegWrite <= 1;
     MemWrite <= 0;
+    MemRead <= 0;
     branch <= 0;
     jump <= 0;
     M <= 1;
     ALUCtrl <= 2'b11;
-    lireg <= 1;
   end
 else if(instr[7:5] == 3'b000 && lireg==1'b1) //li (lli)
  begin
@@ -24,11 +26,11 @@ else if(instr[7:5] == 3'b000 && lireg==1'b1) //li (lli)
     MemToReg <= 1;
     RegWrite <= 1;
     MemWrite <= 0;
+    MemRead <= 0;
     branch <= 0;
     jump <= 0;
     M <= 1;
     ALUCtrl <= 2'b00;
-    lireg <= 0;
   end
 else if (instr[7:5] == 3'b001) // lw
   begin
@@ -36,6 +38,7 @@ else if (instr[7:5] == 3'b001) // lw
     MemToReg <= 1;
     RegWrite <= 1;
     MemWrite <= 0;
+    MemRead <= 1;
     branch <= 0;
     jump <= 0;
     M <= 0;
@@ -47,6 +50,7 @@ else if (instr[7:5] == 3'b010) // sw
     MemToReg <= 1'bz;
     RegWrite <= 0;
     MemWrite <= 1;
+    MemRead <= 0;
     branch <= 0;
     jump <= 0;
     M <= 0;
@@ -58,6 +62,7 @@ else if (instr[7:5] == 3'b011) //addi
     MemToReg <= 0;
     RegWrite <= 1;
     MemWrite <= 0;
+    MemRead <= 0;
     branch <= 0;
     jump <= 0;
     M <= 0;
@@ -69,6 +74,7 @@ else if (instr[7:5] == 3'b100) //beq
     MemToReg <= 1'bz;
     RegWrite <= 0;
     MemWrite <= 0;
+    MemRead <= 0;
     branch <= 1;
     jump <= 0;
     M <= 0;
@@ -80,17 +86,19 @@ else if (instr[7:5] == 3'b101) //slti
     MemToReg <= 0;
     RegWrite <= 1;
     MemWrite <= 0;
+    MemRead <= 0;
     branch <= 0;
     jump <= 0;
     M <= 0;
     ALUCtrl <= 2'b10;
   end
-else if (instr[7:5] == 3'b110)  //*****************add (Need to update this)******************
+else if (instr[7:5] == 3'b110) 
   begin
     ALUSrc <= 0;
     MemToReg <= 0;
     RegWrite <= 1;
     MemWrite <= 0;
+    MemRead <= 0;
     branch <= 0;
     jump <= 0;
     M <= 0;
@@ -102,6 +110,7 @@ else if (instr[7:5] == 3'b111) //j
     MemToReg <= 1'bz;
     RegWrite <= 0;
     MemWrite <= 0;
+    MemRead <= 0;
     branch <= 1'bz;
     jump <= 1;
     M <= 1'bz;
@@ -113,6 +122,7 @@ else
     MemToReg <= 0;
     RegWrite <= 0;
     MemWrite <= 0;
+    MemRead <= 0;
     branch <= 0;
     jump <= 0;
     M <= 0;

@@ -1,3 +1,5 @@
+`timescale 1s/1s
+
 module ZeroExtend (in, out);
   input [3:0] in;
   output [7:0] out;
