@@ -38,17 +38,20 @@ ALU Alu(ALUCtrlSig, ALUSndInput1, ALUSndInput2, ALUOut, Zero);
 wire [DM_DATA_W_m1:0] dDATABUS;
 DM dataMem(MemRead, MemWrite, ALUOut, ReadData2, dDATABUS);
 
-wire [7:0] extended8_1, extended8_2, extended8;
+wire [7:0] extended8_1, extended8_2, extended8_3, extended8_4, extended8;
 SignExtend SignExt(iDATABUS[2:0], extended8_1[7:0]);
-ZeroExtend ZeroExt(iDATABUS[3:0], extended8_2[7:0]);
+ZeroExtend_3 ZeroExt1(iDATABUS[3:0], extended8_2[7:0]);
+ZeroExtend_2 ZeroExt2(iDATABUS[2:0], extended8_3[7:0]);
 
 assign PCSrc = Zero & branch;
-getNextPC NextPC(PCSrc, iDATABUS, jump, iABUS, newIADDR);
+getNextPC NextPC(PCSrc, iDATABUS, jump, iABUS, extended8, newIADDR);
 
 lireg LI(clk, iDATABUS, li);
 
-STwoToOne_1 TwoToOne_5(M, iDATABUS[3:3], iDATABUS[4:4], RFWriteAddr);
-STwoToOne_8 TwoToOne_4(M, extended8_1, extended8_2, extended8);
+
+STwoToOne_1 TwoToOne_6(M, iDATABUS[3:3], iDATABUS[4:4], RFWriteAddr);
+STwoToOne_8 TwoToOne_5(branch, extended8_1, extended8_3, extended8_4);
+STwoToOne_8 TwoToOne_4(M, extended8_4, extended8_2, extended8);
 STwoToOne_8 TwoToOne_3(li, ReadData1,8'b00000000, ALUSndInput1);
 STwoToOne_8 TwoToOne_1(ALUSrc, ReadData2, extended8, ALUSndInput2); 
 STwoToOne_8 TwoToOne_2(MemToReg, ALUOut, dDATABUS, WriteData); 

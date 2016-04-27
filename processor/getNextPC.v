@@ -1,4 +1,4 @@
-module getNextPC (PCSrc, databus, jump, currPC, out);
+module getNextPC (PCSrc, databus, jump, currPC, offset, out);
 parameter MIPS_PC_WIDTH_m1 = 7;  
   input PCSrc, jump;
   input [MIPS_PC_WIDTH_m1:0] databus;
@@ -12,7 +12,7 @@ parameter MIPS_PC_WIDTH_m1 = 7;
 		if (PCSrc == 0)
 			out <= currPC + 1;
 		else
-			out <= {currPC[7:3],databus[2:0]};	 
+			out <= currPC+1+offset;	 
     end
   else 
   begin
