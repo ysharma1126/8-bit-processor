@@ -1,5 +1,3 @@
-`timescale 1s/1s
-
 module DM(MemRead, MemWrite, ABUS, DIN, DATABUS);
 
   parameter DELAY_T = 10;
@@ -26,18 +24,22 @@ module DM(MemRead, MemWrite, ABUS, DIN, DATABUS);
   initial     //initialize all RAM cells to 0 at startup
     begin
     DATABUS_driver = 0;
+    //$display($time," DM_Data: %b",DATABUS_driver);
     for (i=0; i <= DM_ADDR_MAX_m1; i = i + 1)
        ram[i] = 0;
     end
 
   always @(MemRead or MemWrite or ABUS or DIN)
     begin
-      #DELAY_T DATABUS_driver =  ram[ABUS];
+      #DELAY_T 
+      DATABUS_driver =  ram[ABUS];
+      //$display($time," DM_Data: %b",DATABUS_driver);
       if (MemWrite == 1'b1)
       begin
       #30
       if (MemWrite == 1'b1)
         ram[ABUS] = DIN;
+        DATABUS_driver = ram[ABUS];
     end
   end
 endmodule

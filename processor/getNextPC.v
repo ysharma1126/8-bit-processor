@@ -1,6 +1,4 @@
-`timescale 1s/1s
-
-module getNextPC (PCSrc, databus,  jump, currPC, offset, out);
+module getNextPC (PCSrc, databus, jump, currPC, out);
 parameter MIPS_PC_WIDTH_m1 = 7;  
   input PCSrc, jump;
   input [MIPS_PC_WIDTH_m1:0] databus;
@@ -8,14 +6,18 @@ parameter MIPS_PC_WIDTH_m1 = 7;
   input [MIPS_PC_WIDTH_m1:0] currPC;
   output reg [MIPS_PC_WIDTH_m1:0] out;
 
-	always @(PCSrc, currPC, offset)
+	always @(PCSrc, currPC, offset) begin
   if (jump == 0)
     begin
 		if (PCSrc == 0)
 			out <= currPC + 1;
 		else
-			out <= currPC + 1 + offset;	 
+			out <= {currPC[7:3],databus[2:0]};	 
     end
-  else
+  else 
+  begin
     out <= {currPC[7:5],databus[4:0]};
+  end
+  //$display($time," NextPC: %b",out);
+  end
 endmodule
