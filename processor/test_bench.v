@@ -62,7 +62,7 @@ Ctrl Control(iDATABUS, li, ALUSrc, MemToReg, RegWrite, MemWrite, MemRead, branch
 initial begin
 	$dumpfile("test.vcd");
     $dumpvars(0,test_bench);
-    $monitor ("Time: %d, PC: %b, Instruction: %b, Reg0: %b, Reg1: %b, Data: %b, A: %b, B: %b, C: %b, LI: %b, RD1: %b, RD2: %b",$time, iABUS, iDATABUS, output0, output1, dDATABUS, ALUSndInput1, ALUSndInput2, ALUOut, li, ReadData1, ReadData2);
+    $monitor ("Time: %d, PC: %b, Instruction: %b, Reg0: %b, Reg1: %b, Data: %b",$time, iABUS, iDATABUS, output0, output1, dDATABUS);
 	osc = 0;
 end
 
