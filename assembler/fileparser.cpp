@@ -18,6 +18,9 @@ void labelToBinary(string assembly_name, string machine_name){
 	int format; //holds format type
 	assembly_file.open("program/" + assembly_name);
 	machine_file.open("program/" + machine_name);
+	while( getline(assembly_file,instruction) && instruction != ".data"){
+		//do nothing
+	}
 	while( getline(assembly_file,instruction)){
 		format = getFormat(&instruction);
 		if(format == 1){ //if format is M
@@ -38,6 +41,9 @@ void assemblyToBinary(string assembly_name, string machine_name){
 	int format; //holds format type
 	assembly_file.open("program/" + assembly_name);
 	machine_file.open("program/" + machine_name);
+	while(getline(assembly_file,instruction) && instruction != ".text"){
+		//do nothing
+	}
 	while( getline(assembly_file,instruction)){
 		format = getFormat(&instruction);
 		binary = binary + getOpcode(&instruction);
