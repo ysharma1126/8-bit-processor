@@ -21,5 +21,6 @@ std::string getOpcode(std::string * instruction);
 int getFormat(std::string * instruction);
 std::string getRegisters(std::string * instruction,int format, std::string * command);
 std::string getImmediate(std::string * instruction,int format);
+void printDataVector();
 
 #endif

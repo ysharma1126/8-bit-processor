@@ -33,6 +33,17 @@ void storeData(string assembly_name){
 		Data * data = new Data(data_name,data_value, to_string(i));
 		data_list.push_back(data);
 	}
+	printDataVector();
+}
+
+//useful for debugging
+void printDataVector(){
+	for(vector<Data *>::iterator it=data_list.begin(); it!=data_list.end();it++){
+		cout << "---------" << endl;
+		cout << "name: " << (*it)->name << endl;
+		cout << "value: " << (*it)->value << endl;
+		cout << "address: " << (*it)->address << endl;
+	}
 }
 
 //accepts strings for the filenames
