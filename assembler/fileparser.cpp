@@ -8,6 +8,28 @@ bool checkFileExists(string file_name){
 }
 
 //accepts strings for the filenames
+//handles labels and data in the .data field
+void labelToBinary(string assembly_name, string machine_name){
+	ifstream assembly_file;
+	ofstream machine_file;
+	string instruction; //holds lines read in from assembly_file
+	string label; //holds label read from assembly_file
+	string binary; //holds binary immediate
+	int format; //holds format type
+	assembly_file.open("program/" + assembly_name);
+	machine_file.open("program/" + machine_name);
+	while( getline(assembly_file,instruction)){
+		format = getFormat(&instruction);
+		if(format == 1){ //if format is M
+		}
+		else if(format == 2){ //if format is I
+		}
+		else{ //format is J
+		}
+	}
+}
+
+//accepts strings for the filenames
 void assemblyToBinary(string assembly_name, string machine_name){
 	ifstream assembly_file;
 	ofstream machine_file;
