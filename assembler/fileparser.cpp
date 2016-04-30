@@ -1,22 +1,38 @@
 #include "fileparser.h"
 using namespace std;
 
-class Data{
-public:
-	string name; //holds name of data
-	int value;//holds value of data
-	int address;//holds address of data
-	Data(string n, int v, int a){
-		name=n;
-		value=v;
-		int address;
-	}
-};
+vector<Data *> data_list; //holds a list of data in data segment
+
+Data::Data(string n, string v, string a){
+	name=n;
+	value=v;
+	address=a;
+}
 
 //checks if a file exists in program directory
 bool checkFileExists(string file_name){
 	ifstream file_tester("program/" + file_name);
 	return file_tester.good();
+}
+
+void storeData(string assembly_name){
+	ifstream assembly_file;
+	assembly_file.open("program/" + assembly_name);
+	string data_line;
+	while( getline(assembly_file,data_line) && data_line != ".data"){
+		//do nothing
+	}
+	string text;
+	string data_name;
+	string data_value;
+	int i=0;
+	while( getline(assembly_file,data_line) && data_line != ".text"){
+		stringstream ss(data_line);
+		ss >> data_name;
+		ss >> data_value;
+		Data * data = new Data(data_name,data_value, to_string(i));
+		data_list.push_back(data);
+	}
 }
 
 //accepts strings for the filenames
@@ -30,7 +46,7 @@ void labelToBinary(string assembly_name, string machine_name){
 	int format; //holds format type
 	assembly_file.open("program/" + assembly_name);
 	machine_file.open("program/" + machine_name);
-	while( getline(assembly_file,instruction) && instruction != ".data"){
+	while( getline(assembly_file,instruction) && instruction != ".text"){
 		//do nothing
 	}
 	while( getline(assembly_file,instruction)){
