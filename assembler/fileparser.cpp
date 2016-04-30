@@ -56,14 +56,12 @@ bool isNumber(string * s){
 
 //returns pointer to Data object with specified name
 Data * findData(string * name){
-	vector<Data *>::iterator it=data_list.begin();
-	while(it!=data_list.end()){
+	for(vector<Data *>::iterator it=data_list.begin();it!=data_list.end();it++){
 		if( (*it)->name == *name){
-			break;
+			return *it;
 		}
-		it++;
 	}
-	return *it;
+	return NULL;
 }
 
 //accepts strings for the filenames
@@ -84,10 +82,15 @@ void labelToBinary(string assembly_name){
 		assembly_no_label << instruction << endl;
 	}
 	assembly_no_label << instruction << endl;
+	int comma1; //position of first comma
+	int colon; //position of colon (for labels)
 	while( getline(assembly_file,instruction)){
 		format = getFormat(&instruction);
+		comma1 = instruction.find(",");
+		colon = instruction.find(":");
+		if(colon >= 0){ //means theres a label on this line
+		}
 		if(format == 1){ //if format is M
-			int comma1 = instruction.find(",");
 			label = instruction.substr(comma1+1,instruction.length()-comma1-1);
 			if( !isNumber(&label) ){ //if theres a label for li
 				data = findData(&label);
@@ -119,6 +122,15 @@ void labelToBinary(string assembly_name){
 			}
 		}
 		else if(format == 2){ //if format is I
+			int comma2 = instruction.find(",",comma1+1);
+			label = instruction.substr(comma2+1,instruction.length()-comma2-1);
+			data = findData(&label);
+			if(isNumber(&label) || data == NULL){//means theres no label or its not valid
+				assembly_no_label << instruction << endl;
+			}
+			else{
+				assembly_no_label << instruction.substr(0,comma2+1) << data->value << endl;
+			}
 		}
 		else{ //format is J
 		}
