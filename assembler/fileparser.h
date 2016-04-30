@@ -10,7 +10,7 @@ void labelToBinary(std::string input_file, std::string output_file);
 void assemblyToBinary(std::string input_file, std::string output_file);
 std::string getOpcode(std::string * instruction);
 int getFormat(std::string * instruction);
-std::string getRegisters(std::string * instruction,int format);
+std::string getRegisters(std::string * instruction,int format, std::string * command);
 std::string getImmediate(std::string * instruction,int format);
 
 #endif

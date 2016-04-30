@@ -3,11 +3,13 @@ using namespace std;
 
 class Data{
 public:
-	string name;
-	int value;
-	Data(string s, int i){
-		name=s;
-		value=i;
+	string name; //holds name of data
+	int value;//holds value of data
+	int address;//holds address of data
+	Data(string n, int v, int a){
+		name=n;
+		value=v;
+		int address;
 	}
 };
 
@@ -58,7 +60,7 @@ void assemblyToBinary(string assembly_name, string machine_name){
 		format = getFormat(&instruction);
 		binary = binary + getOpcode(&instruction);
 		if(format == 1 || format == 2){ //if format is M or I
-			binary = binary + getRegisters(&instruction,format);
+			binary = binary + getRegisters(&instruction,format,&binary);
 		}
 		binary = binary + getImmediate(&instruction,format);
 		machine_file << binary << "\n";
@@ -130,7 +132,7 @@ int getFormat(string * instruction){
 }
 
 //takes the instruction and returns the registers in the correct format
-string getRegisters(string * instruction, int format){
+string getRegisters(string * instruction, int format, string * command){
 	string reg1, reg2;
 	int dollarsign1; //stores location of first dollar sign
 	int dollarsign2; //stores location of second dollar sign
@@ -152,7 +154,13 @@ string getRegisters(string * instruction, int format){
 	}
 	dollarsign2 = instruction->find("$",dollarsign1+1);
 	comma2 = instruction->find(",",dollarsign2);
-	reg2 = instruction->substr(dollarsign2+1,comma2-dollarsign2-1);
+	if(*command == "001" || *command =="010"){ //if sw or lw
+		int para2 = instruction->find(")");
+		reg2 = instruction->substr(dollarsign2+1,para2-dollarsign2-1);
+	}
+	else{
+		reg2 = instruction->substr(dollarsign2+1,comma2-dollarsign2-1);
+	}
 	try {
 		if (!(reg2 == "0" || reg2 == "1")){
 			throw reg1;
@@ -172,11 +180,21 @@ string getImmediate(string * instruction, int format){
 	space = instruction->find(" ");
 	comma1 = instruction->find(",");
 	comma2 = instruction->find(",",comma1+1);
+	string command = instruction->substr(0,space);
 	if(format == 1){
 		immediate = instruction->substr(comma1+1,4);
 	}
 	else if(format == 2){
-		immediate = instruction->substr(comma2+1,3);
+		if( command=="add" ){
+			immediate = "000";
+		}
+		else if(command =="lw" || command == "sw"){
+			int para1 = instruction->find("(");
+			immediate = instruction->substr(comma1+1, para1-comma1-1);
+		}
+		else{
+			immediate = instruction->substr(comma2+1,3);
+		}
 	}
 	else if(format == 3){
 		immediate = instruction->substr(space+1,5);
