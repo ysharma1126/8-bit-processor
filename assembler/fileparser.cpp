@@ -1,6 +1,16 @@
 #include "fileparser.h"
 using namespace std;
 
+class Data{
+public:
+	string name;
+	int value;
+	Data(string s, int i){
+		name=s;
+		value=i;
+	}
+};
+
 //checks if a file exists in program directory
 bool checkFileExists(string file_name){
 	ifstream file_tester("program/" + file_name);
