@@ -5,6 +5,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <cctype>
 
 class Data{
 public:
@@ -15,7 +16,9 @@ public:
 };
 void storeData(std::string assembly_name);
 bool checkFileExists(std::string file_name);
-void labelToBinary(std::string input_file, std::string output_file);
+bool isNumber(std::string s);
+Data * findData(std::string * name);
+void labelToBinary(std::string input_file);
 void assemblyToBinary(std::string input_file, std::string output_file);
 std::string getOpcode(std::string * instruction);
 int getFormat(std::string * instruction);

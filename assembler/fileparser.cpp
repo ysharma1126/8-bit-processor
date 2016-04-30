@@ -33,7 +33,6 @@ void storeData(string assembly_name){
 		Data * data = new Data(data_name,data_value, to_string(i));
 		data_list.push_back(data);
 	}
-	printDataVector();
 }
 
 //useful for debugging
@@ -46,23 +45,78 @@ void printDataVector(){
 	}
 }
 
+bool isNumber(string * s){
+	for(int i=0; i < s->length(); i++){
+		if( !isdigit(s->at(i))){
+			return 0;
+		}
+	}
+	return 1;
+}
+
+//returns pointer to Data object with specified name
+Data * findData(string * name){
+	vector<Data *>::iterator it=data_list.begin();
+	while(it!=data_list.end()){
+		if( (*it)->name == *name){
+			break;
+		}
+		it++;
+	}
+	return *it;
+}
+
 //accepts strings for the filenames
 //handles labels and data in the .data field
-void labelToBinary(string assembly_name, string machine_name){
+void labelToBinary(string assembly_name){
+	storeData(assembly_name);//first we store all the data in data segment
 	ifstream assembly_file;
-	ofstream machine_file;
+	ofstream assembly_no_label;
 	string instruction; //holds lines read in from assembly_file
 	string label; //holds label read from assembly_file
 	string binary; //holds binary immediate
+	string tmp; //used for pseudoinstructions (li)
+	Data * data; //points to data object with the found label
 	int format; //holds format type
 	assembly_file.open("program/" + assembly_name);
-	machine_file.open("program/" + machine_name);
+	assembly_no_label.open("program/temporaryfile");
 	while( getline(assembly_file,instruction) && instruction != ".text"){
-		//do nothing
+		assembly_no_label << instruction << endl;
 	}
+	assembly_no_label << instruction << endl;
 	while( getline(assembly_file,instruction)){
 		format = getFormat(&instruction);
 		if(format == 1){ //if format is M
+			int comma1 = instruction.find(",");
+			label = instruction.substr(comma1+1,instruction.length()-comma1-1);
+			if( !isNumber(&label) ){ //if theres a label for li
+				data = findData(&label);
+				if( (data->value).length() == 8){ //pseudoinstruction for li
+					tmp = instruction.substr(0,comma1+1);
+					assembly_no_label << tmp << (data->value).substr(0,4) << endl;
+					assembly_no_label << tmp << (data->value).substr(4,4) << endl;
+				}
+				else if( (data->value).length() == 4){
+					tmp = instruction.substr(0,comma1+1);
+					assembly_no_label << tmp + (data->value) << endl;
+				}
+				else{
+					cout << "Error: Invoking (li) with label of incorrect value length" << endl;
+				}
+			}
+			else { //li is an immediate value
+				if(label.length() == 8){
+					tmp = instruction.substr(0,comma1+1);
+					assembly_no_label << tmp << label.substr(0,4) << endl;
+					assembly_no_label << tmp << label.substr(4,4) << endl;
+				}
+				else if(label.length() ==4){
+					assembly_no_label << instruction << endl;
+				}
+				else{
+					cout << "Error: Invoking (li) with immediate of incorrect length" << endl;
+				}
+			}
 		}
 		else if(format == 2){ //if format is I
 		}
