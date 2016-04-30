@@ -1,0 +1,88 @@
+8-BIT PROCESSOR
+
+ABSTRACT- 
+
+/***************MATT*************/
+
+Single Cycle Processor-
+
+ISA-
+
+Just make a nice ISA sheet+description
+
+DATAPATH
+
+Just make a nice Datapath Diagram+description
+
+CONTROL
+
+Just make a nice Control Table+description
+
+DESIGN CHOICES (Defense) (Most important part) 
+
+/*************SHALIN************/ Go hard, defend everything
+
+CODE- 
+
+Assembler (C)-
+
+/************SHALIN**************/
+
+Processor (Verilog)-
+
+
+/*************YASH**************/
+
+
+
+(Mention how byte-addressable and assembler were technically extra credits if you want)
+
+
+
+Extra Credit- 
+
+Pipelining- 
+
+IMPLEMENTATION- 
+
+Just make MIPS Pipelined Datapath (with Forwarding+Stalling), plus revisions for our implementation + description
+
+CODE-
+
+/************YASH***********/
+
+
+Memory Hierarchy- 
+
+IMPLEMENTATION- 
+
+Just make a nice visual representation of the Memory Hierarchy utilized + description
+
+CODE- 
+
+/**********MATT*********/
+
+
+
+
+Programming into PLD- 
+
+ATTEMPT AT IMPLEMENTATION-
+
+/**************YASH*************/
+
+
+
+Compiler- 
+
+ATTEMPT AT IMPLEMENTATION- 
+
+/**************SHALIN***********/
+
+
+
+
+
+CONCLUSION- 
+
+/************MATT**********/
