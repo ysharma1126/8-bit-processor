@@ -155,9 +155,8 @@ void labelToBinary(string assembly_name){
 			}
 			else{
 				if(command == "beq"){
-					cout << label_data->value << endl;
 					int addr = stoi(label_data->value,NULL) + disp;
-					assembly_no_label << instruction.substr(0,comma2+1) << (bitset<8>(addr)) << endl;
+					assembly_no_label << instruction.substr(0,comma2+1) << (bitset<3>(addr)) << endl;
 				}
 				else{
 					assembly_no_label << instruction.substr(0,comma2+1) << data->value << endl;
@@ -165,6 +164,11 @@ void labelToBinary(string assembly_name){
 			}
 		}
 		else{ //format is J
+			int space = instruction.find(" ");
+			label = instruction.substr(space+1,instruction.length()-space-1);
+			data = findData(&label,label_list);
+			int addr = stoi(data->value,NULL) + disp;
+			assembly_no_label << instruction.substr(0,space+1) << (bitset<5>(addr)) << endl;
 		}
 	}
 }
