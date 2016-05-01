@@ -84,8 +84,6 @@ Data * findData(string * name, vector<Data *> &v){
 //handles labels and data in the .data field
 void labelToBinary(string assembly_name){
 	storeData(assembly_name);//first we store all the data in data segment
-	printVector(data_list);
-	printVector(label_list);
 	ifstream assembly_file;
 	ofstream assembly_no_label;
 	string instruction; //holds lines read in from assembly_file
@@ -174,13 +172,13 @@ void labelToBinary(string assembly_name){
 }
 
 //accepts strings for the filenames
-void assemblyToBinary(string assembly_name, string machine_name){
+void assemblyToBinary(string machine_name){
 	ifstream assembly_file;
 	ofstream machine_file;
 	string instruction; //holds lines read in from assembly_file
 	string binary=""; //holds binary instruction
 	int format; //holds format type
-	assembly_file.open("program/" + assembly_name);
+	assembly_file.open("program/temporaryfile");
 	machine_file.open("program/" + machine_name);
 	while(getline(assembly_file,instruction) && instruction != ".text"){
 		//do nothing
@@ -195,6 +193,7 @@ void assemblyToBinary(string assembly_name, string machine_name){
 		machine_file << binary << "\n";
 		binary = "";
 	}
+	remove("program/temporaryfile");
 }
 
 //takes the instruction and returns the opcode 

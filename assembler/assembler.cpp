@@ -13,5 +13,6 @@ int main() {
 	}
 	cout << "Enter the name of the output machine code file: ";
 	getline(cin, machine_name);
-	assemblyToBinary(assembly_name,machine_name);
+	labelToBinary(assembly_name);
+	assemblyToBinary(machine_name);
 }
