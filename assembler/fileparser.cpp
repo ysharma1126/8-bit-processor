@@ -2,6 +2,7 @@
 using namespace std;
 
 vector<Data *> data_list; //holds a list of data in data segment
+vector<Data *> label_list;
 
 Data::Data(string n, string v, string a){
 	name=n;
@@ -26,18 +27,33 @@ void storeData(string assembly_name){
 	string data_name;
 	string data_value;
 	int i=0;
+	int colon;
+	//parses through the data section
 	while( getline(assembly_file,data_line) && data_line != ".text"){
 		stringstream ss(data_line);
 		ss >> data_name;
 		ss >> data_value;
 		Data * data = new Data(data_name,data_value, to_string(i));
+		i++;
 		data_list.push_back(data);
+	}
+	//finds locations of labels
+	i=0;
+	string label;
+	while( getline(assembly_file,data_line) ){
+		colon = data_line.find(":");
+		if(colon >= 0){ //means theres a label on this line
+			label = data_line.substr(0,colon);
+			Data * data = new Data(label, to_string(i), to_string(i));
+			label_list.push_back(data);
+		}
+		i++;
 	}
 }
 
 //useful for debugging
-void printDataVector(){
-	for(vector<Data *>::iterator it=data_list.begin(); it!=data_list.end();it++){
+void printVector(vector<Data *> &v){
+	for(vector<Data *>::iterator it=v.begin(); it!=v.end();it++){
 		cout << "---------" << endl;
 		cout << "name: " << (*it)->name << endl;
 		cout << "value: " << (*it)->value << endl;
@@ -55,8 +71,8 @@ bool isNumber(string * s){
 }
 
 //returns pointer to Data object with specified name
-Data * findData(string * name){
-	for(vector<Data *>::iterator it=data_list.begin();it!=data_list.end();it++){
+Data * findData(string * name, vector<Data *> &v){
+	for(vector<Data *>::iterator it=v.begin();it!=v.end();it++){
 		if( (*it)->name == *name){
 			return *it;
 		}
@@ -68,6 +84,8 @@ Data * findData(string * name){
 //handles labels and data in the .data field
 void labelToBinary(string assembly_name){
 	storeData(assembly_name);//first we store all the data in data segment
+	printVector(data_list);
+	printVector(label_list);
 	ifstream assembly_file;
 	ofstream assembly_no_label;
 	string instruction; //holds lines read in from assembly_file
@@ -84,20 +102,24 @@ void labelToBinary(string assembly_name){
 	assembly_no_label << instruction << endl;
 	int comma1; //position of first comma
 	int colon; //position of colon (for labels)
+	int disp=0; //displacement for label addresses because of additional instructions added
 	while( getline(assembly_file,instruction)){
-		format = getFormat(&instruction);
-		comma1 = instruction.find(",");
 		colon = instruction.find(":");
 		if(colon >= 0){ //means theres a label on this line
+			label = instruction.substr(0,colon);
+			instruction = instruction.substr(colon+1,instruction.length()-colon-1);
 		}
+		format = getFormat(&instruction);
+		comma1 = instruction.find(",");
 		if(format == 1){ //if format is M
 			label = instruction.substr(comma1+1,instruction.length()-comma1-1);
 			if( !isNumber(&label) ){ //if theres a label for li
-				data = findData(&label);
+				data = findData(&label,data_list);
 				if( (data->value).length() == 8){ //pseudoinstruction for li
 					tmp = instruction.substr(0,comma1+1);
 					assembly_no_label << tmp << (data->value).substr(0,4) << endl;
 					assembly_no_label << tmp << (data->value).substr(4,4) << endl;
+					disp++;
 				}
 				else if( (data->value).length() == 4){
 					tmp = instruction.substr(0,comma1+1);
@@ -112,6 +134,7 @@ void labelToBinary(string assembly_name){
 					tmp = instruction.substr(0,comma1+1);
 					assembly_no_label << tmp << label.substr(0,4) << endl;
 					assembly_no_label << tmp << label.substr(4,4) << endl;
+					disp++;
 				}
 				else if(label.length() ==4){
 					assembly_no_label << instruction << endl;
@@ -121,15 +144,24 @@ void labelToBinary(string assembly_name){
 				}
 			}
 		}
-		else if(format == 2){ //if format is I
+		else if(format == 2){ //if format iinstruction.find(" ")		
 			int comma2 = instruction.find(",",comma1+1);
+			string command = instruction.substr(0,instruction.find(" "));
 			label = instruction.substr(comma2+1,instruction.length()-comma2-1);
-			data = findData(&label);
-			if(isNumber(&label) || data == NULL){//means theres no label or its not valid
+			data = findData(&label,data_list);
+			Data * label_data = findData(&label,label_list);
+			if(isNumber(&label) || (data == NULL && label_data == NULL)){//means theres no data with that name or its a number
 				assembly_no_label << instruction << endl;
 			}
 			else{
-				assembly_no_label << instruction.substr(0,comma2+1) << data->value << endl;
+				if(command == "beq"){
+					cout << label_data->value << endl;
+					int addr = stoi(label_data->value,NULL) + disp;
+					assembly_no_label << instruction.substr(0,comma2+1) << (bitset<8>(addr)) << endl;
+				}
+				else{
+					assembly_no_label << instruction.substr(0,comma2+1) << data->value << endl;
+				}
 			}
 		}
 		else{ //format is J
