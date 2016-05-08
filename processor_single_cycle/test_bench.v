@@ -36,7 +36,13 @@ wire Zero;
 ALU Alu(ALUCtrlSig, ALUSndInput1, ALUSndInput2, ALUOut, Zero);
 
 wire [DM_DATA_W_m1:0] dDATABUS;
-DM dataMem(MemRead, MemWrite, ALUOut, ReadData2, dDATABUS);
+wire MMRead;
+wire MMWrite;
+wire [DM_DATA_W_m1:0] CachetoMem;
+DM dataMem1(MemRead, MemWrite, ALUOut, ReadData2, MemtoCache, dDATABUS, MMRead, MMWrite, CachetoMem);
+
+wire [DM_DATA_W_m1:0] MemtoCache;
+MM dataMem2(MMRead, MMWrite, ALUOut, CachetoMem, MemtoCache);
 
 wire [7:0] extended8_1, extended8_2, extended8_3, extended8_4, extended8;
 SignExtend SignExt(iDATABUS[2:0], extended8_1[7:0]);
