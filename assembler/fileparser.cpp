@@ -122,6 +122,7 @@ void labelToBinary(string assembly_name){
 	assembly_no_label << instruction << endl;
 	int comma1; //position of first comma
 	int colon; //position of colon (for labels)
+	int current_line=0;
 	while( getline(assembly_file,instruction)){
 		colon = instruction.find(":");
 		if(colon >= 0){ //means theres a label on this line
@@ -138,6 +139,7 @@ void labelToBinary(string assembly_name){
 					tmp = instruction.substr(0,comma1+1);
 					assembly_no_label << tmp << (data->value).substr(0,4) << endl;
 					assembly_no_label << tmp << (data->value).substr(4,4) << endl;
+					current_line++;
 				}
 				else if( (data->value).length() == 4){
 					tmp = instruction.substr(0,comma1+1);
@@ -152,6 +154,7 @@ void labelToBinary(string assembly_name){
 					tmp = instruction.substr(0,comma1+1);
 					assembly_no_label << tmp << label.substr(0,4) << endl;
 					assembly_no_label << tmp << label.substr(4,4) << endl;
+					current_line++;
 				}
 				else if(label.length() ==4){
 					assembly_no_label << instruction << endl;
@@ -172,7 +175,7 @@ void labelToBinary(string assembly_name){
 			}
 			else{
 				if(command == "beq"){
-					int addr = stoi(label_data->value,NULL);
+					int addr = stoi(label_data->value,NULL) - current_line - 1;
 					assembly_no_label << instruction.substr(0,comma2+1) << (bitset<3>(addr)) << endl;
 				}
 				else{
@@ -188,6 +191,7 @@ void labelToBinary(string assembly_name){
 			addr = addr % 32;
 			assembly_no_label << instruction.substr(0,space+1) << (bitset<5>(addr)) << endl;
 		}
+		current_line++;
 	}
 }
 

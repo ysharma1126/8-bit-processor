@@ -51,7 +51,7 @@ addi $0,$0,001
 sw $0,000($1)
 li $1,one
 lw $1,000($1)
-beq $0,$1,001
+beq $0,$1,exit
 j loop
 exit:li $0,three
 lw $0,000($0)
