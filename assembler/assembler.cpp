@@ -3,7 +3,7 @@
 using namespace std;
 
 int main() {
-	string assembly_name,machine_name;
+	string assembly_name;
 	cout << "Enter the name of the input assembly file: ";
 	getline(cin, assembly_name);
 	while(!checkFileExists(assembly_name)){
@@ -11,8 +11,6 @@ int main() {
 		cout << "Enter the name of the assembly file: ";
 		getline(cin, assembly_name);
 	}
-	cout << "Enter the name of the output machine code file: ";
-	getline(cin, machine_name);
 	labelToBinary(assembly_name);
-	assemblyToBinary(machine_name);
+	assemblyToBinary("output.bin");
 }
