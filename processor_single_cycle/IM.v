@@ -21,7 +21,7 @@ module IM(ABUS,DATABUS);
     begin
     DATABUS_driver = IM_DATA_Z;  
     //$display($time," IM_Data: %b",DATABUS_driver);
-    $readmemb("../program/output.bin", ram);
+    $readmemb("program/output.bin", ram);
     end
     
     
