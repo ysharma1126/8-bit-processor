@@ -185,6 +185,7 @@ void labelToBinary(string assembly_name){
 			label = instruction.substr(space+1,instruction.length()-space-1);
 			data = findData(&label,label_list);
 			int addr = stoi(data->value,NULL);
+			addr = addr % 32;
 			assembly_no_label << instruction.substr(0,space+1) << (bitset<5>(addr)) << endl;
 		}
 	}
