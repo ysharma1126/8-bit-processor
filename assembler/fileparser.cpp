@@ -80,6 +80,19 @@ Data * findData(string * name, vector<Data *> &v){
 	return NULL;
 }
 
+//increments the addresses of all the labels that occur before addr
+void incrementLabelAddresses(int addr){
+	int tmp; //temporary variable
+	for(vector<Data *>::iterator it=label_list.begin();it!=label_list.end();it++){
+		tmp = stoi((*it)->value,NULL);
+		if( tmp > addr){
+		tmp++;
+		(*it)->value = to_string(tmp);
+		(*it)->address = to_string(tmp);
+		}
+	}
+}
+
 //accepts strings for the filenames
 //handles labels and data in the .data field
 void labelToBinary(string assembly_name){
@@ -100,7 +113,7 @@ void labelToBinary(string assembly_name){
 	assembly_no_label << instruction << endl;
 	int comma1; //position of first comma
 	int colon; //position of colon (for labels)
-	int disp=0; //displacement for label addresses because of additional instructions added
+	int current_line=0;
 	while( getline(assembly_file,instruction)){
 		colon = instruction.find(":");
 		if(colon >= 0){ //means theres a label on this line
@@ -117,7 +130,8 @@ void labelToBinary(string assembly_name){
 					tmp = instruction.substr(0,comma1+1);
 					assembly_no_label << tmp << (data->value).substr(0,4) << endl;
 					assembly_no_label << tmp << (data->value).substr(4,4) << endl;
-					disp++;
+					incrementLabelAddresses(current_line);
+					current_line++;
 				}
 				else if( (data->value).length() == 4){
 					tmp = instruction.substr(0,comma1+1);
@@ -132,7 +146,8 @@ void labelToBinary(string assembly_name){
 					tmp = instruction.substr(0,comma1+1);
 					assembly_no_label << tmp << label.substr(0,4) << endl;
 					assembly_no_label << tmp << label.substr(4,4) << endl;
-					disp++;
+					incrementLabelAddresses(current_line);
+					current_line++;
 				}
 				else if(label.length() ==4){
 					assembly_no_label << instruction << endl;
@@ -142,7 +157,7 @@ void labelToBinary(string assembly_name){
 				}
 			}
 		}
-		else if(format == 2){ //if format iinstruction.find(" ")		
+		else if(format == 2){ //if format I
 			int comma2 = instruction.find(",",comma1+1);
 			string command = instruction.substr(0,instruction.find(" "));
 			label = instruction.substr(comma2+1,instruction.length()-comma2-1);
@@ -153,7 +168,7 @@ void labelToBinary(string assembly_name){
 			}
 			else{
 				if(command == "beq"){
-					int addr = stoi(label_data->value,NULL) + disp;
+					int addr = stoi(label_data->value,NULL) - current_line - 1 ;
 					assembly_no_label << instruction.substr(0,comma2+1) << (bitset<3>(addr)) << endl;
 				}
 				else{
@@ -165,9 +180,10 @@ void labelToBinary(string assembly_name){
 			int space = instruction.find(" ");
 			label = instruction.substr(space+1,instruction.length()-space-1);
 			data = findData(&label,label_list);
-			int addr = stoi(data->value,NULL) + disp;
+			int addr = stoi(data->value,NULL);
 			assembly_no_label << instruction.substr(0,space+1) << (bitset<5>(addr)) << endl;
 		}
+		current_line++;
 	}
 }
 
