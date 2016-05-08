@@ -1,38 +1,40 @@
+.data
+zero 00000000
+one 00000001
+two 00000010
+three 00000011
+four 00000100
+five 00000101
 .text
-fib: 
-li $1, 1
-sw $0, 0($1)
-li $1,2
-li $0,0
+fib:li $1,one
 sw $0,0($1)
-li $1,4
-li $0,0
+li $1,two
+li $0,zero
 sw $0,0($1)
-
-loop:
-li $0,2
-li $1,3
+li $1,four
+li $0,zero
+sw $0,0($1)
+loop:li $0,two
+li $1,three
 lw $0,0($0)
 lw $1,0($1)
 add $0,$1
-li $1,5
+li $1,five
 sw $0,0($1)
-li $1,3
+li $1,three
 lw $0,0($1)
-li $1,2
+li $1,two
 sw $0,0($1)
-li $1,5
+li $1,five
 lw $0,0($1)
-li $1,3
+li $1,three
 sw $0,0($1)
-li $1,4
+li $1,four
 lw $0,0($1)
-addi $0,$0,1
+addi $0,$0,001
 sw $0,0($1)
-li $1,3
+li $1,three
 lw $1,0($1)
 beq $0,$1,exit
 j loop
-
-exit:
-#######
+exit:addi $0,$0,000

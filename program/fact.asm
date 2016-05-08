@@ -1,46 +1,45 @@
+.data
+zero 00000000
+one 00000001
+two 00000010
+three 00000011
 .text
-fact:
-li $1,0
+fact:li $1,zero
 lw $1,0($1)
-addi $1,$1,-1
+addi $1,$1,111
 sw $0,0($1)
-li $0,0
+li $0,zero
 sw $1,0($0)
 lw $0,0($1)
-slti $1,$0,2
+slti $1,$0,010
 beq $1,$0,L1
-li $1,0
+li $1,zero
 lw $1,0($1)
-addi $1,1
-li $0,0
+addi $1,$1,001
+li $0,zero
 sw $1,0($0) 
-li $0,1
+li $0,one
 j L2P2
-
-L1:
-addi $0,$0,-1
-li $1,2
+L1:addi $0,$0,111
+li $1,two
 sw $0,0($1)
-li $1,1
+li $1,one
 lw $0,0($1)
-addi $0,$0,1
+addi $0,$0,001
 sw $0,0($1)
-li $1,2
+li $1,two
 lw $0,0($1)
 j fact
-
-L2P2:
-li $1,0
+L2P2:li $1,zero
 lw $1,0($1)
-#pseudoinstruction
 mul $0,$0,$1 
-li $1,3
+li $1,three
 sw $0,0($1)
-li $1,0
+li $1,zero
 lw $1,0($1)
-addi $1,$1,1
-li $0,0
+addi $1,$1,001
+li $0,zero
 sw $0,0($1)
-li $0,3
+li $0,three
 lw $0,0($0)
 j L2P2
