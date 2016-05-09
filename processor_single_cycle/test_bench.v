@@ -41,9 +41,9 @@ wire MMWrite;
 wire [DM_DATA_W_m1:0] CachetoMem;
 wire [DM_DATA_W_m1:0] OldTag;
 wire CacheSwap;
+wire [DM_DATA_W_m1:0] MemtoCache;
 DM dataMem1(MemRead, MemWrite, ALUOut, ReadData2, MemtoCache, dDATABUS, MMRead, MMWrite, CachetoMem, OldTag, CacheSwap);
 
-wire [DM_DATA_W_m1:0] MemtoCache;
 MM dataMem2(MMRead, MMWrite, ALUOut, CachetoMem, MemtoCache, OldTag, CacheSwap);
 
 wire [7:0] extended8_1, extended8_2, extended8_3, extended8_4, extended8;
