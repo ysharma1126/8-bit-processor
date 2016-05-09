@@ -5,8 +5,9 @@ two   00000010
 three 00000011
 four  00000100
 five  00000101
+num1  00000011
 .text
-main:li $0,five
+main:li $0,num1
 j fib
 fib:li $1,one
 sw $0,000($1)

@@ -6,14 +6,16 @@ three 00000011
 four  00000100
 five  00000101
 stack 11111110
+num1  00000101
+num2  00000100
 .text
 main:li $1,two
-li $0,five
+li $0,num1
 sw $0,000($1)
 li $1,stack
 sw $0,000($1)
 addi $1,$1,111
-li $0,four
+li $0,num2
 sw $0,000($1)
 li $0,zero
 sw $1,000($0)
