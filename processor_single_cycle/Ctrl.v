@@ -38,7 +38,7 @@ else if (instr[7:5] == 3'b001) // lw
     RegWrite <= 1;
     MemWrite <= 0;
     MemRead <= 1;
-    branch <= 0;
+    branch <= 0;    
     jump <= 0;
     M <= 0;
     ALUCtrl <= 2'b00;
