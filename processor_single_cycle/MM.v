@@ -32,13 +32,13 @@ module MM(MMRead, MMWrite, ABUS, CachetoMem, MemtoCache);
 
   always @(MMRead or MMWrite or ABUS or CachetoMem)
     begin
-      #DELAY_T  
-      if(MMRead == 1)
+      #DELAY_T
+      if(MMRead == 1'b1)
       begin
         Mem_Cache_driver = MEM[ABUS];
         $display ("Continue");
       end 
-      if(MMWrite == 1)
+      if(MMWrite == 1'b1)
       begin
         MEM[ABUS] = CachetoMem;
       end

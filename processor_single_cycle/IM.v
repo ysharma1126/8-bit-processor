@@ -26,7 +26,6 @@ module IM(ABUS,DATABUS);
     
     
   always @(ABUS) begin
-          #10 
           DATABUS_driver =  ram[ABUS];
           //$display($time," IM_Data: %b",DATABUS_driver);
           end
