@@ -12,13 +12,4 @@ This will compile/run the assembler and immediately compile/run the processor.
 
 ## Overview
 ### Root
-+ Datapath.jpg : Block Diagram of Datapath and Table of Control Values
-
-### Assembler
-The assembler utilizes three passes to convert the assembly code to machine code. On the first pass, it stores data and indexes all the labels used. On the second pass, it replaces labels on jump and branch-if-equal commands with the appropriate binary values. The third pass converts the instructions to the binary machine code.
-+ fileparser.cpp : Contains functions used to parse assembly code and convert to machine code.
-+ assembler.cpp  : Main assembler function that invokes appropriate functions from fileparser.cpp 
-
-### Processor Single Cycled
-The proccessor is completely made in verilog. There is a separate module for every component of the datapath and controlpath.
-+ test_bench.v : Instantiates the modules in such a way to transform the individual processor components into the envisioned datapath.
++ SharmaPatelCavallaroDocumentationFinal.pdf : Documentation of Project, contains all information on processor
