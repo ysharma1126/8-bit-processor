@@ -1,4 +1,4 @@
-module MM(MMRead, MMWrite, ABUS, CachetoMem, MemtoCache);
+module MM(MMRead, MMWrite, ABUS, CachetoMem, MemtoCache, OldTag, CacheSwap);
 
   parameter DELAY_T = 10;
 
@@ -11,6 +11,8 @@ module MM(MMRead, MMWrite, ABUS, CachetoMem, MemtoCache);
   input MMWrite;                      
   input [DM_ADDR_W_m1:0] ABUS;      // address bus
   input [DM_ADDR_W_m1:0] CachetoMem;
+  input [DM_ADDR_W_m1:0] OldTag;
+  input CacheSwap;
   output [DM_ADDR_W_m1:0] MemtoCache;
 
 
@@ -30,17 +32,24 @@ module MM(MMRead, MMWrite, ABUS, CachetoMem, MemtoCache);
     end
 
 
-  always @(MMRead or MMWrite or ABUS or CachetoMem)
+  always @(MMRead or MMWrite or ABUS or CachetoMem or CacheSwap)
     begin
-      #DELAY_T
+      //#DELAY_T
+      #1
       if(MMRead == 1'b1)
       begin
         Mem_Cache_driver = MEM[ABUS];
-        $display ("Continue");
       end 
       if(MMWrite == 1'b1)
       begin
+        if(CacheSwap == 1'b1)
+        begin
+          MEM[OldTag] = CachetoMem;
+        end
+        else
+        begin
         MEM[ABUS] = CachetoMem;
+        end
       end
     end
 endmodule
