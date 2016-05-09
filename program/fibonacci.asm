@@ -1,10 +1,10 @@
 .data
-zero 00000000
-one 00000001
-two 00000010
+zero  00000000
+one   00000001
+two   00000010
 three 00000011
-four 00000100
-five 00000101
+four  00000100
+five  00000101
 .text
 main:li $0,five
 j fib
