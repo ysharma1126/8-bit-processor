@@ -12,4 +12,4 @@ This will compile/run the assembler and immediately compile/run the processor. W
 
 ## Overview
 ### Root
-+ SharmaPatelCavallaroDocumentationFinal.pdf : Documentation of Project, contains all information on processor
++ SharmaPatelCavallaro_CompArch_Final.pdf : Documentation of Project, contains all information on processor
